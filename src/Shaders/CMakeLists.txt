@@ -1,0 +1,5 @@
+add_library(LoadShaders INTERFACE)
+
+set_target_properties(LoadShaders PROPERTIES LINKER_LANGUAGE CXX)
+target_include_directories(LoadShaders INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(LoadShaders INTERFACE glfw)

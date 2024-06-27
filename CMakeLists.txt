@@ -20,37 +20,30 @@ endif()
 
 
 project ("DrawShapesTest")
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+# set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 add_subdirectory(libs)
-#
-# Set include paths
-#
-include_directories (src/
-                     libs/glad/include/
-                     libs/glfw/include/
-                     libs/glm/)
-
-#
-# Add files
-#
-file (GLOB         LIBS_SOURCES libs/glad/src/glad.c)
-file (GLOB_RECURSE PROJECT_HEADERS src/*.hpp
-                                   src/*.h)
-file (GLOB_RECURSE PROJECT_SOURCES src/*.cpp
-                                   src/*.cxx
-                                   src/*.cc
-                                   src/*.c)
-
+add_subdirectory(src)
 
 # Add source to this project's executable.
-add_executable (${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS}
-                                ${PROJECT_SHADERS} ${PROJECT_CONFIGS}
-                                ${LIBS_SOURCES})
+add_executable (${PROJECT_NAME} src/DrawShapesTest.cpp src/DrawShapestest.h)
+
+add_custom_target(copy_resources ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${PROJECT_SOURCE_DIR}/src/Shaders
+        ${PROJECT_BINARY_DIR}/Shaders
+        COMMENT "Copying resources into binary directory")
+
+add_dependencies(${PROJECT_NAME} copy_resources)
+
 target_link_libraries (${PROJECT_NAME}
                        glfw
-                       ${GLFW_LIBRARIES}
-                       ${GLAD_LIBRARIES})
+                       glm
+                       glad
+                       Controls
+                       LoadShaders
+                       Shapes
+)
 
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
