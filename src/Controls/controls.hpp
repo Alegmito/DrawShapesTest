@@ -1,10 +1,11 @@
 #pragma once
+#include <glm/gtc/constants.hpp>
 #include <glm/glm.hpp>
 
 class GLFWwindow;
 
 class MVPMatrix {
-  glm::mat4 ViewMatrix = glm::mat4(0);
+  glm::mat4 ViewMatrix;
   glm::mat4 ProjectionMatrix;
 
 
@@ -13,9 +14,9 @@ class MVPMatrix {
   // Initial horizontal angle : toward -Z
   float horizontalAngle = 3.14f;
   // Initial vertical angle : none
-  float verticalAngle = 0.0f;
+  float verticalAngle = 0;
   // Initial Field of View
-  float initialFoV = 45.0f;
+  float initialFoV = 90.0f;
 
   float speed = 3.0f; // 3 units / second
   float mouseSpeed = 0.005f;

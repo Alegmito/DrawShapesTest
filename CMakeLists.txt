@@ -41,7 +41,9 @@ target_link_libraries (${PROJECT_NAME}
                        glm
                        glad
                        Controls
-                       LoadShaders)
+                       LoadShaders
+                       Shapes
+)
 
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

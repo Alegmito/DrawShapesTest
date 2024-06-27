@@ -17,11 +17,12 @@ void MVPMatrix::computeMatricesFromInputs(GLFWwindow* window)
   glfwGetCursorPos(window, &xpos, &ypos);
 
   // Reset mouse position for next frame
-  glfwSetCursorPos(window, 1024 / 2.f, 768 / 2.f);
+  glfwSetCursorPos(window, 800 / 2.f, 600 / 2.f);
 
   // Compute new orientation
-  horizontalAngle += mouseSpeed * float(1024 / 2.f - xpos);
-  verticalAngle += mouseSpeed * float(768 / 2.f - ypos);
+  horizontalAngle += mouseSpeed * float(800 / 2.f - xpos);
+  verticalAngle += (mouseSpeed * float(600 / 2.f - ypos));
+  verticalAngle = abs(verticalAngle) >= glm::half_pi<double>() ? glm::sign(verticalAngle) * glm::half_pi<double>() : verticalAngle;
 
   // Direction : Spherical coordinates to Cartesian coordinates conversion
   glm::vec3 direction(
@@ -41,21 +42,32 @@ void MVPMatrix::computeMatricesFromInputs(GLFWwindow* window)
   glm::vec3 up = glm::cross(right, direction);
 
   // Move forward
-  if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 	position += direction * deltaTime * speed;
   }
   // Move backward
-  if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 	position -= direction * deltaTime * speed;
   }
   // Strafe right
-  if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 	position += right * deltaTime * speed;
   }
   // Strafe left
-  if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 	position -= right * deltaTime * speed;
   }
+
+  if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+	position += up * deltaTime * speed;
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+	position -= up * deltaTime * speed;
+  }
+
+
+  printf("up vector is : %f, %f, %f\n", up.x, up.y, up.z);
 
   float FoV = initialFoV;// - 5 * glfwGetMouseWheel(); // Now GLFW 3 requires setting up a callback for this. It's a bit too complicated for this beginner's tutorial, so it's disabled instead.
 
@@ -64,7 +76,7 @@ void MVPMatrix::computeMatricesFromInputs(GLFWwindow* window)
   // Camera matrix
   ViewMatrix = glm::lookAt(
 	position,           // Camera is here
-	position + direction, // and looks here : at the same position, plus "direction"
+	position + glm::normalize(direction), // and looks here : at the same position, plus "direction"
 	up                  // Head is up (set to 0,-1,0 to look upside-down)
   );
 
